@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Roblox Script GitHub - Upload</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f6f8fa; margin: 20px; }
+  h1 { color: #24292e; }
+  #uploadForm { margin-bottom: 20px; }
+  input[type="file"] { margin-bottom: 10px; }
+  ul { list-style: none; padding-left: 0; }
+  li { background: white; padding: 8px 12px; margin-bottom: 5px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; }
+  li:hover { background: #f1f8ff; }
+  pre { background: #e1e4e8; padding: 10px; white-space: pre-wrap; max-height: 200px; overflow-y: auto; border-radius: 4px; }
+</style>
+</head>
+<body>
+  <h1>Roblox Script GitHub - Upload</h1>
+  <form id="uploadForm">
+    <input type="file" id="fileInput" accept=".txt,.lua" multiple />
+    <br/>
+    <button type="submit">Upload Scripts</button>
+  </form>
+  <h2>Uploaded Scripts</h2>
+  <ul id="fileList"></ul>
+  <pre id="scriptContent" style="display:none;"></pre>
+
+<script>
+  const uploadForm = document.getElementById('uploadForm');
+  const fileInput = document.getElementById('fileInput');
+  const fileList = document.getElementById('fileList');
+  const scriptContent = document.getElementById('scriptContent');
+
+  let scripts = [];
+
+  uploadForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const files = fileInput.files;
+    if (!files.length) return alert('Please select script files to upload.');
+
+    for (let file of files) {
+      if (!file.name.match(/\.(lua|txt)$/i)) {
+        alert(`File "${file.name}" is not a valid Lua or text file.`);
+        continue;
+      }
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        scripts.push({ name: file.name, content: event.target.result });
+        renderFileList();
+      };
+      reader.readAsText(file);
+    }
+    fileInput.value = '';
+  });
+
+  function renderFileList() {
+    fileList.innerHTML = '';
+    scripts.forEach((script, index) => {
+      const li = document.createElement('li');
+      li.textContent = script.name;
+      li.onclick = () => showScriptContent(index);
+      fileList.appendChild(li);
+    });
+  }
+
+  function showScriptContent(index) {
+    scriptContent.style.display = 'block';
+    scriptContent.textContent = scripts[index].content;
+  }
+</script>
+</body>
+</html>
